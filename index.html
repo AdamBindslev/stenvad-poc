@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Mosebrugsudstilling - Proof of Concept</title>
+  
+  <!-- PWA Meta -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#181512">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mosebrug">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <!-- Google Fonts for Stenvad typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="kiosk-mode">
+  <!-- Hovedskærm (Ingen scrollbars) -->
+  <div id="app-container" class="app-container">
+    
+    <!-- Top Header med Stenvad Mosebrug logo & titel -->
+    <header class="kiosk-header">
+      <div class="header-brand">
+        <img src="assets/logo.png" alt="Stenvad Mosebrug" class="header-logo" id="header-logo">
+        <div class="header-titles">
+          <h1 class="main-title">Mosebrugsudstilling - Proof of Concept</h1>
+          <p class="subtitle" id="header-instruction">Tryk på et markeret punkt på kortet for at se video</p>
+        </div>
+      </div>
+
+      <!-- Kiosk kontrol (Fuld skærm & info) -->
+      <div class="header-actions">
+        <div class="status-indicator" id="online-status" title="Status">
+          <span class="status-dot"></span>
+          <span class="status-text">Klar</span>
+        </div>
+        <button id="fullscreen-btn" class="kiosk-btn" title="Skift fuld skærm" aria-label="Fuld skærm">
+          <svg class="icon-expand" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+          <svg class="icon-compress" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+          </svg>
+          <span class="btn-label">Fuld skærm</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hovedområde med kortet -->
+    <main class="map-viewport">
+      <!-- Kort-ramme med fast aspect ratio så punkterne altid rammer præcist -->
+      <div class="map-stage" id="map-stage">
+        <img src="assets/map.jpg" alt="Historisk kort over Djursland med mosebrug" class="map-image" id="map-image" draggable="false">
+        
+        <!-- Interaktive hotspots indsættes dynamisk her via app.js -->
+        <div class="hotspots-layer" id="hotspots-layer" aria-label="Interaktive punkter på kortet"></div>
+      </div>
+    </main>
+
+    <!-- Bundbjælke / Diskret udstillingsfodnote -->
+    <footer class="kiosk-footer">
+      <div class="footer-left">
+        <span class="kiosk-tag">Geodætisk Institut · Djursland 1:100 000</span>
+      </div>
+      <div class="footer-right">
+        <span class="kiosk-tag">Stenvad Mosebrugscenter</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Video Lightbox Modal -->
+  <div id="video-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-badge" id="modal-point-badge">Punkt</span>
+          <h2 class="modal-title" id="modal-title">Titel på lokation</h2>
+        </div>
+        <button id="modal-close-btn" class="modal-close-btn" aria-label="Luk video">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Luk</span>
+        </button>
+      </div>
+
+      <!-- Video container (16:9 responsive) -->
+      <div class="modal-video-container" id="video-container">
+        <!-- Iframe eller HTML5 video indsættes her når modal åbnes -->
+      </div>
+
+      <!-- Modal Footer med beskrivelse -->
+      <div class="modal-footer">
+        <p class="modal-description" id="modal-description"></p>
+        <div class="modal-footer-actions">
+          <span class="modal-hint">Tryk 'Luk' for at vende tilbage til kortet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fuldskærms velkomst-banner ved første tryk (hvis udstillingen ikke allerede kører fullscreen) -->
+  <div id="fullscreen-overlay" class="fullscreen-prompt" style="display: none;">
+    <div class="fullscreen-prompt-box">
+      <img src="assets/logo.png" alt="Stenvad Mosebrug" class="prompt-logo">
+      <h2>Mosebrugsudstilling</h2>
+      <p>Tryk her for at starte udstillingen i fuld skærm</p>
+      <button id="start-kiosk-btn" class="prompt-start-btn">Start Udstilling</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
