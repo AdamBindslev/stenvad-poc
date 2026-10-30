@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       videoEl.autoplay = true;
       videoEl.playsInline = true;
       videoContainer.appendChild(videoEl);
+      videoEl.play().catch(() => {});
     }
 
     modal.classList.add('is-active');
@@ -103,7 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.remove('is-active');
     modal.setAttribute('aria-hidden', 'true');
 
-    // VIGTIGT: Tøm videoContainer med det samme for øjeblikkeligt at stoppe lydafspilning!
+    // Stop omgående video og lyd
+    const activeVideo = videoContainer.querySelector('video');
+    if (activeVideo) {
+      activeVideo.pause();
+    }
+
+    // Tøm videoContainer efter lukke-animation
     setTimeout(() => {
       videoContainer.innerHTML = '';
     }, 200);

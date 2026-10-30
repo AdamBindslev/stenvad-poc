@@ -1,5 +1,5 @@
 // Service Worker for Mosebrugsudstilling POC
-const CACHE_NAME = 'mosebrug-poc-v1';
+const CACHE_NAME = 'mosebrug-poc-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -35,6 +35,11 @@ self.addEventListener('fetch', (event) => {
   // Pass through external network requests like YouTube
   const url = new URL(event.request.url);
   if (url.origin !== location.origin) {
+    return;
+  }
+
+  // Lad browseren håndtere videofiler og Range-requests direkte uden om cachen
+  if (url.pathname.match(/\.(mp4|webm|ogv)$/i) || event.request.headers.has('range')) {
     return;
   }
 

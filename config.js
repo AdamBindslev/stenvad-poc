@@ -28,12 +28,8 @@ const EXHIBITION_CONFIG = {
       x: 72.60,
       y: 13.78,
       video: {
-        // 'youtube' eller 'local'
-        type: "youtube",
-        // YouTube video id (fra https://youtu.be/DLzxrzFCyOs)
-        youtubeId: "DLzxrzFCyOs",
-        // Sti til lokal videofil når udstillingen skal køre 100% offline (fx "assets/video1.mp4")
-        localSrc: "assets/videos/point1.mp4"
+        type: "local",
+        localSrc: "assets/videos/Stenvad.mp4"
       }
     },
     {
@@ -44,9 +40,8 @@ const EXHIBITION_CONFIG = {
       x: 55.40,
       y: 19.91,
       video: {
-        type: "youtube",
-        youtubeId: "DLzxrzFCyOs",
-        localSrc: "assets/videos/stenvad.mp4"
+        type: "local",
+        localSrc: "assets/videos/Stenvad.mp4"
       }
     },
     {
@@ -57,9 +52,8 @@ const EXHIBITION_CONFIG = {
       x: 44.74,
       y: 37.19,
       video: {
-        type: "youtube",
-        youtubeId: "DLzxrzFCyOs",
-        localSrc: "assets/videos/kolind.mp4"
+        type: "local",
+        localSrc: "assets/videos/Stenvad.mp4"
       }
     }
   ]
